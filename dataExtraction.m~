@@ -1,0 +1,17 @@
+
+% LOAD .gdf file in MATLAB
+[s,h] = sload('A01T.gdf');
+pos = h.EVENT.POS;
+typ = h.EVENT.TYP;
+
+% data generation
+
+for i = 1:length(pos)
+    if typ(i) == 769 || typ(i) == 770 || typ(i) == 771 || typ(i) == 772
+        final_matrix(i) = [s(pos(i), :), typ(i)];
+    end
+    
+end
+
+length(final_matrix)
+
