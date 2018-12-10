@@ -10,7 +10,7 @@ import tensorflow as tf
 import pandas as pd
 import numpy as np
 from sklearn import preprocessing
-from sklearn.decomposition import PCA
+from sklearn.decomposition import PCA, FastICA
 import vrep
 import sys
 import matplotlib.pyplot as plt
@@ -78,9 +78,15 @@ class BrainComputerInterface():
         
         return X,Y,Xtrain,Ytrain,Xtest,Ytest,Xval,Yval
     
+    def ICA(self, X):
+        transformer = FastICA(18)
+        X_T = transformer.fit_transform(X)
+        return X_T
+        
     def PCA(self, X, Y, N):
-        pca = PCA(n_components=3)
-        principalComponents = pca.fit_transform(X)
+        X_T = self.ICA(X)
+        pca = PCA(n_components=N)
+        principalComponents = pca.fit_transform(X_T)
 #        df = pd.DataFrame({'var':pca.explained_variance_ratio_,
 #             'PC':['PC1','PC2','PC3']})
 #        sns.barplot(x='PC',y="var", 
@@ -136,7 +142,7 @@ class BrainComputerInterface():
 if __name__ == "__main__":        
     BCI = BrainComputerInterface('data.csv')
     X,Y,Xtrain,Ytrain,Xtest,Ytest,Xval,Yval = BCI.dataPreProcessing()
-    DF = BCI.PCA(X,Y,2)
+    DF = BCI.PCA(X,Y,3)
 
 
     
